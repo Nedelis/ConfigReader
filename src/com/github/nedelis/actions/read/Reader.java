@@ -22,4 +22,10 @@ public final class Reader {
         return Page.EMPTY_PAGE;
     }
 
+    public static @NotNull String readFileExtension(@NotNull File configFile) {
+        var fileName = configFile.getName();
+        var i = fileName.lastIndexOf('.');
+        return i > 0 ? fileName.substring(i+1) : "";
+    }
+
 }

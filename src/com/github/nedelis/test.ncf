@@ -1,4 +1,2 @@
-modifications: FLP
-[SECTION_NAME]
-int __one__ = (1)
-int __two__ = (2)
+modifications: NSS, NFT;
+__bobby__ = (bobby)

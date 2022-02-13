@@ -1,12 +1,14 @@
 package com.github.nedelis.actions.parse;
 
 import com.github.nedelis.actions.read.Page;
+import com.github.nedelis.actions.read.Reader;
 import com.github.nedelis.vocabulary.keyword.FieldType;
 import com.github.nedelis.vocabulary.keyword.FieldTypes;
-import com.github.nedelis.vocabulary.token.Token;
+import com.github.nedelis.vocabulary.keyword.IFieldType;
 import com.github.nedelis.vocabulary.token.Tokens;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
 import java.util.*;
 
 public final class Parser {
@@ -46,8 +48,8 @@ public final class Parser {
         var fieldName = "";
         var fieldType = FieldType.DEFAULT_FIELD_TYPE;
         var fieldValue = "";
-        var stack = new StringBuilder();
 
+        var stack = new StringBuilder();
         int i = 0;
         var chArray = line.toCharArray();
 
@@ -82,40 +84,61 @@ public final class Parser {
 
         String finalFieldName = fieldName;
         String finalFieldValue = fieldValue;
-        com.github.nedelis.vocabulary.keyword.IFieldType<?> finalFieldType = fieldType;
+        IFieldType<?> finalFieldType = fieldType;
         return new HashMap<>() {{
             put(finalFieldName, finalFieldType.fromString(finalFieldValue));
         }};
     }
 
-    public static void parseNCFL(@NotNull Page page, boolean hasType) {
+    private static void parseNCFC(@NotNull Page page, @NotNull Set<String> modifications, boolean hasType) {
+
+    }
+
+    private static void parseNCFL(@NotNull Page page, @NotNull Set<String> modifications, boolean hasType) {
+        var currentSection = "DEFAULT";
+        for(var line : page.page()) {
+            if(!modifications.contains("NSS")) {
+                var section = parseSectionName(line);
+                if (!section.equals(currentSection) && !section.equals("DEFAULT")) {
+                    currentSection = section;
+                    continue;
+                }
+            }
+            if(DATA.containsKey(currentSection)) DATA.get(currentSection).putAll(parseField(line, hasType));
+            else DATA.put(currentSection, parseField(line, hasType));
+        }
+    }
+
+    private static void parseNCFW(@NotNull Page page, @NotNull Set<String> modifications, boolean hasType) {
+
+    }
+
+    public static void parse(@NotNull File file) {
+        var page = Reader.readConfigFile(file);
+        var fileExtension = Reader.readFileExtension(file);
+
         DATA.clear();
         DATA.put("DEFAULT", new HashMap<>());
-        String currentSection = "DEFAULT", currentFieldName = "";
-        var currentFieldType = FieldType.DEFAULT_FIELD_TYPE;
-        var closingToken = Token.EMPTY_TOKEN;
 
         var modifications = parseModificationsLine(page.getLine(0));
         if (!modifications.isEmpty()) page.removeLine(0);
 
-        var res = parseField(page.getLine(0), true);
-        System.out.println(res.get("one").getClass());
-        System.out.println(res.get("one"));
-
-        for(var line : page.page()) {
-            if(!modifications.contains("NSS")) {
-                var section = parseSectionName(line);
-                if (!section.equals(currentSection)) currentSection = section;
-                continue;
-            }
-
+        switch (fileExtension) {
+            case "ncf":
+                if(modifications.contains("VWP")) parseNCFW(page, modifications, !modifications.contains("NFT"));
+                else if(modifications.contains("SCP")) parseNCFC(page, modifications, !modifications.contains("NFT"));
+                else parseNCFL(page, modifications, !modifications.contains("NFT"));
+                break;
+            case "ncfc":
+                parseNCFC(page, modifications, !modifications.contains("NFT"));
+                break;
+            case "ncfl":
+                parseNCFL(page, modifications, !modifications.contains("NFT"));
+                break;
+            case "ncfw":
+                parseNCFW(page, modifications, !modifications.contains("NFT"));
+                break;
         }
-
-        System.out.println(currentSection);
-    }
-
-    public static void parse(@NotNull Page page) {
-
     }
 
     public static Map<String, Map<String, Object>> getData() {
