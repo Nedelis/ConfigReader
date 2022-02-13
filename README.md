@@ -6,7 +6,7 @@
 2. [Файлы конфигурации NCF](#Файлы-конфигурации-NCF)
 
 ### Описание библиотеки
-Данная библиотека сейчас имеет реализацию только на языке Java. Внутри содержит парсер, который анализирует файл конфигурации, и переменную, в которую записываются все данные, полученные из файла конфигурации.
+Данная библиотека сейчас имеет реализацию только на языке Java. Внутри содержит парсер, анализирующий файл конфигурации, и переменную, в которую записываются все данные, полученные из файла конфигурации.
 
 [Оглавление](#Оглавление) :arrow_up:
 ____
@@ -58,17 +58,23 @@ ____
 ```java
   package com.examples.custom_field_types;
 
-  import com.github.nedelis.vocabulary.keyword.FieldTypes;
-  import com.github.nedelis.vocabulary.keyword.FieldType;
-  
-  public class Main {
+import com.github.nedelis.vocabulary.keyword.FieldTypes;
+import com.github.nedelis.vocabulary.keyword.FieldType;
+import org.jetbrains.annotations.NotNull;
 
-      public static void main(String[] args) {
+public class Main {
 
-          FieldTypes.ModificationUnit.addFieldType(new FieldType(ExampleFieldType.class, "example"));
+    public static void main(String[] args) {
 
-      }
-  }
+        FieldTypes.ModificationUnit.addFieldType(new FieldType<ExampleFieldType>("example") {
+            @Override
+            public ExampleFieldType fromString(@NotNull String s) {
+                return ExampleFieldType.parseExampleFieldType(s);
+            }
+        });
+
+    }
+}
 ```
 Теперь в файлы конфигурации можно добавлять переменные с типом данных `example`.
 
@@ -118,7 +124,7 @@ modifications: FLP, NSS, NFT (и т.д.)
 ____
 
 #### 5. Расширения файлов.
-Вместо того, чтобы указывать парсеру, как читать файл в модификации, можно изменить расширение файла:
+Вместо того чтобы указывать парсеру, как читать файл в модификации, можно изменить расширение файла:
 * Файлы `*.ncfl` будут разделяться построчно.
 * Файлы `*.ncfw` будут разделяться пословно.
 * Файлы `*.ncfc` будут разделяться посимвольно.
