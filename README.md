@@ -56,10 +56,18 @@ ____
 В этом примере можно увидеть, что у переменных внутри файла можно указать тип данных (все типы данных, имеющихся по умолчанию, перечислены в разделе о файлах конфигурации NFC). В библиотеке предусмотрено дополнение имеющихся типов данных своими при помощи вложенного класса `ModificationUnit` у класса `FieldTypes`. Пример использования `ModificationUnit` расположен ниже.
 
 ```java
-  public static void main(String[] args) {
+  package com.examples.custom_field_types;
+
+  import com.github.nedelis.vocabulary.keyword.FieldTypes;
+  import com.github.nedelis.vocabulary.keyword.FieldType;
   
-    FieldTypes.ModificationUnit.addFieldType(new FieldType(ExampleFieldType.class, "example"));
-  
+  public class Main {
+
+      public static void main(String[] args) {
+
+          FieldTypes.ModificationUnit.addFieldType(new FieldType(ExampleFieldType.class, "example"));
+
+      }
   }
 ```
 Теперь в файлы конфигурации можно добавлять переменные с типом данных `example`.
