@@ -45,7 +45,7 @@ public final class Parser {
 
         var fieldName = "";
         var fieldType = FieldType.DEFAULT_FIELD_TYPE;
-        var fieldValue = new Object();
+        var fieldValue = "";
         var stack = new StringBuilder();
 
         int i = 0;
@@ -81,9 +81,10 @@ public final class Parser {
         }
 
         String finalFieldName = fieldName;
-        Object finalFieldValue = fieldValue;
+        String finalFieldValue = fieldValue;
+        com.github.nedelis.vocabulary.keyword.IFieldType<?> finalFieldType = fieldType;
         return new HashMap<>() {{
-            put(finalFieldName, finalFieldValue);
+            put(finalFieldName, finalFieldType.fromString(finalFieldValue));
         }};
     }
 
@@ -97,7 +98,9 @@ public final class Parser {
         var modifications = parseModificationsLine(page.getLine(0));
         if (!modifications.isEmpty()) page.removeLine(0);
 
-        System.out.println(parseField(page.getLine(0), true));
+        var res = parseField(page.getLine(0), true);
+        System.out.println(res.get("one").getClass());
+        System.out.println(res.get("one"));
 
         for(var line : page.page()) {
             if(!modifications.contains("NSS")) {

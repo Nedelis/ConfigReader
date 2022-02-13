@@ -1,9 +1,9 @@
 package com.github.nedelis.vocabulary.keyword;
 
-public interface IFieldType extends IKeyword {
+import org.jetbrains.annotations.NotNull;
 
-    default Class<?> fieldType() {
-        return String.class;
-    }
+public interface IFieldType<T> extends IKeyword {
+
+    T fromString(@NotNull String s);
 
 }

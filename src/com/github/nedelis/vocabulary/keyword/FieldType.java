@@ -2,30 +2,27 @@ package com.github.nedelis.vocabulary.keyword;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Objects;
+public abstract class FieldType<T> implements IFieldType<T> {
 
-public record FieldType(@NotNull Class<?> fieldType, @NotNull String keyword) implements IFieldType {
+    public static final IFieldType<?> DEFAULT_FIELD_TYPE = new FieldType<>() {
+        @Override
+        public String fromString(@NotNull String s) {
+            return s;
+        }
+    };
 
-    public static final IFieldType DEFAULT_FIELD_TYPE = new FieldType();
+    private final String keyword;
 
     public FieldType() {
         this("");
     }
 
     public FieldType(@NotNull String keyword) {
-        this(String.class, keyword);
+        this.keyword = keyword;
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        FieldType fieldType1 = (FieldType) o;
-        return fieldType.equals(fieldType1.fieldType);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(fieldType);
+    public String keyword() {
+        return this.keyword;
     }
 }

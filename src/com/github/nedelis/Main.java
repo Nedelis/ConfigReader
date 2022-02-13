@@ -8,7 +8,6 @@ import java.io.File;
 public class Main {
 
     public static void main(String[] args) {
-        System.out.println(Boolean.class);
         Parser.parseNCFL(Reader.readConfigFile(new File("src/com/github/nedelis/test.ncf")), true);
     }
 
