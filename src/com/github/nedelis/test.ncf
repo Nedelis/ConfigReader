@@ -1,2 +1,6 @@
-modifications: NSS, NFT;
-__bobby__ = (bobby)
+modifications:
+[NUMBERS]
+byte __one__ = (1)
+short __two__ = (2)
+int __three__ = (3)
+long __four__ = (4)

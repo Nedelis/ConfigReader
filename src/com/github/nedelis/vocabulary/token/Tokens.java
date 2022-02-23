@@ -5,7 +5,7 @@ import org.jetbrains.annotations.NotNull;
 public enum Tokens {
     ROUND_BRACKETS(new Token('(', ')')),
     SQUARE_BRACKETS(new Token('[', ']')),
-    DOUBLE_UNDERSCORE(new Token("__")),
+    DOUBLE_UNDERSCORE(new Token("__", "__")),
     EQUALS(new Token('=')),
     COMMA(new Token(','));
 

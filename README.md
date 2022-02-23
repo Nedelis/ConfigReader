@@ -15,33 +15,28 @@ ____
 Для начала работы с библиотекой скачайте `*.jar` архив по [ссылке](https://youtu.be/DLzxrzFCyOs). А после подключите его к вашему проекту. Ниже вы сможете увидеть пример работы с библиотекой.
 
 **Класс `Main`, читающий конфиг `some_config.ncf`**
+
 ```java
 
-  package com.examples.config_reader;
-  
-  import com.github.nedelis.actions.parse.Parser;
-  import com.github.nedelis.actions.read.Reader;
-  
-  import java.io.File;
-  import java.util.Map;
-  import java.util.HashMap;
-  
-  public class Main {
-  
-    public static final Map<String, Map<String, Map<String, Object>>> configuration = new HashMap<>();
-    
+package com.examples.config_reader;
+
+import com.github.nedelis.actions.FullRead;
+
+import java.io.File;
+
+public class Main {
+
     public static void main(String[] args) {
-      
-      Parser.parse(new File("com/examples/some_config.ncf"));
-      configuration.put("some_config", Parser.getData());
-      
-      System.out.println(configuration);
-      
+
+        FullRead.read(new File("com/examples/some_config.ncf"));
+
+        System.out.println(FullRead.getReadFiles());
+
     }
-    
-  }
+
+}
 ```
-Вывод в консоль: `{some_config={NUMBERS={four=4, one=1, two=2, three=3}}}`
+Вывод в консоль: `{test.ncf={NUMBERS={four=4, one=1, two=2, three=3}, DEFAULT={}}}`
 
 **Файл `some_config.ncf`**
 ```

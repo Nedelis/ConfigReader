@@ -33,6 +33,16 @@ public record Page(@NotNull List<String> page) {
         this.page.remove(lineNum);
     }
 
+    public @NotNull ArrayList<String> toStringArray() {
+        var list = new ArrayList<String>();
+        for(var line : this.page) {
+            if(!line.isBlank()) {
+                list.add(line);
+            }
+        }
+        return list;
+    }
+
     public char @NotNull [] toCharArray() {
         var builder = new StringBuilder();
         for (var line : this.page) {
