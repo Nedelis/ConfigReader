@@ -33,8 +33,8 @@ public final class Translator implements ITranslator {
         var isNewField = true;
 
         for(var word : splitInput) {
-            if(hasSections && word.startsWith(Tokens.SQUARE_BRACKETS.getTokenAsString()) && word.endsWith(Tokens.SQUARE_BRACKETS.getClosingAsString())) {
-                currentSectionName = word.substring(1, word.length() - 1);
+            if(hasSections && word.startsWith(Tokens.PPSN.getTokenAsString()) && word.endsWith(Tokens.PPSN.getClosingAsString())) {
+                currentSectionName = word.substring(Tokens.PPSN.getTokenAsString().length(), word.length() - Tokens.PPSN.getClosingAsString().length());
                 continue;
             }
 
@@ -43,13 +43,13 @@ public final class Translator implements ITranslator {
                 isNewField = false;
             }
 
-            if(word.startsWith(Tokens.DOUBLE_UNDERSCORE.getTokenAsString()) && word.endsWith(Tokens.DOUBLE_UNDERSCORE.getClosingAsString())) {
-                currentFieldName = word.substring(2, word.length() - 2);
+            if(word.startsWith(Tokens.PPVN.getTokenAsString()) && word.endsWith(Tokens.PPVN.getClosingAsString())) {
+                currentFieldName = word.substring(Tokens.PPVN.getTokenAsString().length(), word.length() - Tokens.PPVN.getClosingAsString().length());
                 continue;
             }
 
-            if(word.startsWith(Tokens.ROUND_BRACKETS.getTokenAsString()) && word.endsWith(Tokens.ROUND_BRACKETS.getClosingAsString())) {
-                currentFieldValue = currentFieldType.fromString(word.substring(1, word.length() - 1));
+            if(word.startsWith(Tokens.PPVV.getTokenAsString()) && word.endsWith(Tokens.PPVV.getClosingAsString())) {
+                currentFieldValue = currentFieldType.fromString(word.substring(Tokens.PPVV.getTokenAsString().length(), word.length() - Tokens.PPVV.getClosingAsString().length()));
 
                 final var finalFieldName = currentFieldName;
                 final var finalFieldValue = currentFieldValue;
@@ -60,6 +60,10 @@ public final class Translator implements ITranslator {
 
                 isNewField = true;
             }
+        }
+
+        if(TRANSLATION_RESULT.get("DEFAULT").isEmpty()) {
+            TRANSLATION_RESULT.remove("DEFAULT");
         }
     }
 

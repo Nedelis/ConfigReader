@@ -23,7 +23,7 @@ public final class OldParser {
             line = line.replaceFirst("modifications:", "");
             var stack = new StringBuilder();
             for(var ch : line.toCharArray()) {
-                if(String.valueOf(ch).equals(String.valueOf(Tokens.COMMA.getToken().token()))) {
+                if(String.valueOf(ch).equals(String.valueOf(Tokens.ENOP.getToken().token()))) {
                     modifications.add(stack.toString());
                     stack = new StringBuilder();
                 } else {
@@ -36,8 +36,8 @@ public final class OldParser {
     }
 
     private static @NotNull String parseSectionName(@NotNull String line) {
-        return line.startsWith(Tokens.SQUARE_BRACKETS.getTokenAsString()) &&
-               line.endsWith(Tokens.SQUARE_BRACKETS.getClosingAsString()) ?
+        return line.startsWith(Tokens.PPSN.getTokenAsString()) &&
+               line.endsWith(Tokens.PPSN.getClosingAsString()) ?
                line.substring(1, line.length()-1) :
                "DEFAULT";
     }
@@ -54,7 +54,7 @@ public final class OldParser {
         var chArray = line.toCharArray();
 
         if(hasType) {
-            while(!(chArray[i]+""+chArray[i+1]).equals(Tokens.DOUBLE_UNDERSCORE.getTokenAsString())) {
+            while(!(chArray[i]+""+chArray[i+1]).equals(Tokens.PPVN.getTokenAsString())) {
                 stack.append(chArray[i]);
                 ++i;
             }
@@ -62,9 +62,9 @@ public final class OldParser {
             stack = new StringBuilder();
         }
 
-        if((chArray[i]+""+chArray[i+1]).equals(Tokens.DOUBLE_UNDERSCORE.getTokenAsString())) {
+        if((chArray[i]+""+chArray[i+1]).equals(Tokens.PPVN.getTokenAsString())) {
             i+=2;
-            while(!(chArray[i]+""+chArray[i+1]).equals(Tokens.DOUBLE_UNDERSCORE.getTokenAsString())) {
+            while(!(chArray[i]+""+chArray[i+1]).equals(Tokens.PPVN.getTokenAsString())) {
                 stack.append(chArray[i]);
                 ++i;
             }
@@ -73,9 +73,9 @@ public final class OldParser {
             i+=2;
         }
 
-        if(String.valueOf(chArray[i]).equals(Tokens.EQUALS.getTokenAsString()) && String.valueOf(chArray[i+1]).equals(Tokens.ROUND_BRACKETS.getTokenAsString())) {
+        if(String.valueOf(chArray[i]).equals(Tokens.ASOP.getTokenAsString()) && String.valueOf(chArray[i+1]).equals(Tokens.PPVV.getTokenAsString())) {
             i+=2;
-            while(!String.valueOf(chArray[i]).equals(Tokens.ROUND_BRACKETS.getClosingAsString())) {
+            while(!String.valueOf(chArray[i]).equals(Tokens.PPVV.getClosingAsString())) {
                 stack.append(chArray[i]);
                 ++i;
             }
@@ -118,19 +118,19 @@ public final class OldParser {
 
         for(var line : page.page()) {
             if(!modifications.contains("NSS")) {
-                if(line.startsWith(Tokens.SQUARE_BRACKETS.getTokenAsString()) && line.endsWith(Tokens.SQUARE_BRACKETS.getClosingAsString())) {
+                if(line.startsWith(Tokens.PPSN.getTokenAsString()) && line.endsWith(Tokens.PPSN.getClosingAsString())) {
                     currentSection = line.substring(1, line.length() - 1);
                     continue;
                 }
-                for(var word : line.split(" ", line.lastIndexOf(Tokens.EQUALS.getTokenAsString()))) {
+                for(var word : line.split(" ", line.lastIndexOf(Tokens.ASOP.getTokenAsString()))) {
                     var localFieldType = FieldTypes.getFieldTypeByKeyword(word);
                     if(fieldType.equals(FieldType.DEFAULT_FIELD_TYPE) && !localFieldType.equals(FieldType.DEFAULT_FIELD_TYPE)) fieldType = localFieldType;
-                    if(word.startsWith(Tokens.DOUBLE_UNDERSCORE.getTokenAsString()) && word.endsWith(Tokens.DOUBLE_UNDERSCORE.getTokenAsString())) fieldName = word.substring(word.indexOf(Tokens.DOUBLE_UNDERSCORE.getTokenAsString())+2, word.lastIndexOf(Tokens.DOUBLE_UNDERSCORE.getTokenAsString()));
+                    if(word.startsWith(Tokens.PPVN.getTokenAsString()) && word.endsWith(Tokens.PPVN.getTokenAsString())) fieldName = word.substring(word.indexOf(Tokens.PPVN.getTokenAsString())+2, word.lastIndexOf(Tokens.PPVN.getTokenAsString()));
                 }
                 String finalFieldName = fieldName;
                 IFieldType<?> finalFieldType = fieldType;
                 var map = new HashMap<String, Object>() {{
-                    put(finalFieldName, finalFieldType.fromString(line.substring(line.lastIndexOf(Tokens.ROUND_BRACKETS.getTokenAsString())+1, line.lastIndexOf(Tokens.ROUND_BRACKETS.getClosingAsString()))));
+                    put(finalFieldName, finalFieldType.fromString(line.substring(line.lastIndexOf(Tokens.PPVV.getTokenAsString())+1, line.lastIndexOf(Tokens.PPVV.getClosingAsString()))));
                 }};
                 if(DATA.containsKey(currentSection)) DATA.get(currentSection).putAll(map);
                 else DATA.put(currentSection, map);

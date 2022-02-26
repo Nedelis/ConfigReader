@@ -1,21 +1,24 @@
 package com.github.nedelis.vocabulary.token;
 
+import com.github.nedelis.Settings;
 import org.jetbrains.annotations.NotNull;
 
 public enum Tokens {
-    ROUND_BRACKETS(new Token('(', ')')),
-    SQUARE_BRACKETS(new Token('[', ']')),
-    DOUBLE_UNDERSCORE(new Token("__", "__")),
-    EQUALS(new Token('=')),
-    COMMA(new Token(','));
+    PREFIX_AND_POSTFIX_OF_SECTION_NAME(Settings.getTokenByName("PREFIX_AND_POSTFIX_OF_SECTION_NAME")), PPSN(Settings.getTokenByName("PREFIX_AND_POSTFIX_OF_SECTION_NAME")),
+    PREFIX_AND_POSTFIX_OF_VAR_NAME(Settings.getTokenByName("PREFIX_AND_POSTFIX_OF_VAR_NAME")), PPVN(Settings.getTokenByName("PREFIX_AND_POSTFIX_OF_VAR_NAME")),
+    PREFIX_AND_POSTFIX_OF_VAR_VALUE(Settings.getTokenByName("PREFIX_AND_POSTFIX_OF_VAR_VALUE")), PPVV(Settings.getTokenByName("PREFIX_AND_POSTFIX_OF_VAR_VALUE")),
+    ASSIGNMENT_OPERATOR(Settings.getTokenByName("ASSIGNMENT_OPERATOR")), ASOP(Settings.getTokenByName("ASSIGNMENT_OPERATOR")),
+    ENUMERATION_OPERATOR(Settings.getTokenByName("ENUMERATION_OPERATOR")), ENOP(Settings.getTokenByName("ENUMERATION_OPERATOR"));
 
-    private final Token token;
+    public static final IToken EMPTY_TOKEN = new Token("", "");
 
-    Tokens(@NotNull Token token) {
+    private final IToken token;
+
+    Tokens(@NotNull IToken token) {
         this.token = token;
     }
 
-    public @NotNull Token getToken() {
+    public @NotNull IToken getToken() {
         return this.token;
     }
 
@@ -27,17 +30,17 @@ public enum Tokens {
         return this.token.hasClosing() ? String.valueOf(this.token.closing().token()) : "";
     }
 
-    public static Token getAsToken(@NotNull Object token) {
+    public static IToken getAsToken(@NotNull Object token) {
         for(var existingToken : Tokens.values()) {
             if(existingToken.getToken().token().toString().equals(token.toString())) {
                 return existingToken.getToken();
             }
         }
-        return Token.EMPTY_TOKEN;
+        return EMPTY_TOKEN;
     }
 
-    public static boolean isToken(@NotNull Token token) {
-        return !getAsToken(token.token()).equals(Token.EMPTY_TOKEN);
+    public static boolean isToken(@NotNull IToken token) {
+        return !getAsToken(token.token()).equals(EMPTY_TOKEN);
     }
 
 }

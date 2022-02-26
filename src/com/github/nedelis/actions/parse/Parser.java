@@ -25,25 +25,25 @@ public final class Parser implements IParser {
         var hasFieldTypes = !modifications.contains("NFT");
 
         for(var line : page.toStringArray()) {
-            if(hasSections && line.startsWith(Tokens.SQUARE_BRACKETS.getTokenAsString()) && line.endsWith(Tokens.SQUARE_BRACKETS.getClosingAsString())) {
+            if(hasSections && line.startsWith(Tokens.PPSN.getTokenAsString()) && line.endsWith(Tokens.PPSN.getClosingAsString())) {
                 PARSING_RESULT.add(line);
                 continue;
             }
 
-            var fieldDeterminants = line.substring(0, line.indexOf(Tokens.EQUALS.getTokenAsString()));
-            var fieldValue = line.substring(line.indexOf(Tokens.EQUALS.getTokenAsString()) + Tokens.EQUALS.getTokenAsString().length() + " ".length());
-            var index = line.indexOf(Tokens.DOUBLE_UNDERSCORE.getTokenAsString());
+            var fieldDeterminants = line.substring(0, line.indexOf(Tokens.ASOP.getTokenAsString()));
+            var fieldValue = line.substring(line.indexOf(Tokens.ASOP.getTokenAsString()) + Tokens.ASOP.getTokenAsString().length() + " ".length());
+            var index = line.indexOf(Tokens.PPVN.getTokenAsString());
 
             if(hasFieldTypes && index > 0) {
                 PARSING_RESULT.add(fieldDeterminants.substring(0, index).replaceAll(" ", ""));
                 fieldDeterminants = fieldDeterminants.substring(index);
             }
 
-            if(fieldDeterminants.startsWith(Tokens.DOUBLE_UNDERSCORE.getTokenAsString())) {
-                PARSING_RESULT.add(fieldDeterminants.substring(0, fieldDeterminants.lastIndexOf(Tokens.DOUBLE_UNDERSCORE.getClosingAsString()) + Tokens.DOUBLE_UNDERSCORE.getClosingAsString().length()));
+            if(fieldDeterminants.startsWith(Tokens.PPVN.getTokenAsString())) {
+                PARSING_RESULT.add(fieldDeterminants.substring(0, fieldDeterminants.lastIndexOf(Tokens.PPVN.getClosingAsString()) + Tokens.PPVN.getClosingAsString().length()));
             }
 
-            PARSING_RESULT.add(fieldValue.substring(fieldValue.indexOf(Tokens.ROUND_BRACKETS.getTokenAsString()), fieldValue.lastIndexOf(Tokens.ROUND_BRACKETS.getClosingAsString()) + Tokens.ROUND_BRACKETS.getClosingAsString().length()));
+            PARSING_RESULT.add(fieldValue.substring(fieldValue.indexOf(Tokens.PPVV.getTokenAsString()), fieldValue.lastIndexOf(Tokens.PPVV.getClosingAsString()) + Tokens.PPVV.getClosingAsString().length()));
         }
     }
 

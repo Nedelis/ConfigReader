@@ -1,20 +1,20 @@
 package com.github.nedelis.actions;
 
-import com.github.nedelis.actions.parse.Parser;
+import com.github.nedelis.Settings;
 import com.github.nedelis.actions.parse.ParserFactory;
 import com.github.nedelis.actions.read.Reader;
 import com.github.nedelis.actions.translate.TranslatorFactory;
+import com.github.nedelis.util.collections.Config;
+import com.github.nedelis.util.collections.ReadFiles;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
 
-public class FullRead {
-
-    private static final Map<String, Map<String, Map<String, Object>>> readFiles = new HashMap<>();
+public final class FullRead {
 
     public static void read(@NotNull File file) {
+        Settings.readSettings();
+
         var page = Reader.readConfigFile(file);
         var fileExtension = Reader.readFileExtension(file);
         var modifications = Reader.readModificationsLine(page.getLine(0));
@@ -26,11 +26,7 @@ public class FullRead {
         var translator = TranslatorFactory.getTranslator(modifications, fileExtension);
         translator.translate(parser.getParsingResult(), modifications);
 
-        readFiles.put(file.getName(), Map.copyOf(translator.getTranslationResult()));
-    }
-
-    public static @NotNull Map<String, Map<String, Map<String, Object>>> getReadFiles() {
-        return readFiles;
+        ReadFiles.getReadFiles().put(file.getName(), Config.fromMap(translator.getTranslationResult()));
     }
 
 }

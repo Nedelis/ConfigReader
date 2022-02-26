@@ -33,7 +33,7 @@ public final class Reader {
             line = line.replaceFirst("modifications:", "");
             var stack = new StringBuilder();
             for(var ch : line.toCharArray()) {
-                if(java.lang.String.valueOf(ch).equals(java.lang.String.valueOf(Tokens.COMMA.getToken().token()))) {
+                if(java.lang.String.valueOf(ch).equals(java.lang.String.valueOf(Tokens.ENOP.getToken().token()))) {
                     modifications.add(stack.toString());
                     stack = new StringBuilder();
                 } else {

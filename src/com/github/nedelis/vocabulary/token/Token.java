@@ -6,9 +6,7 @@ import org.jetbrains.annotations.Unmodifiable;
 
 import java.util.Objects;
 
-public record Token(@NotNull Object token, Token closing) {
-
-    public static final Token EMPTY_TOKEN = new Token("", "");
+public record Token(@NotNull Object token, IToken closing) implements IToken {
 
     public Token(@NotNull Object token) {
         this(token, null);
@@ -20,12 +18,8 @@ public record Token(@NotNull Object token, Token closing) {
 
     @Contract(pure = true)
     @Override
-    public @Unmodifiable Object token() {
+    public @Unmodifiable @NotNull Object token() {
         return String.valueOf(this.token);
-    }
-
-    public boolean hasClosing() {
-        return !this.closing.equals(EMPTY_TOKEN);
     }
 
     @Override
