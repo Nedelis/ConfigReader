@@ -7,12 +7,12 @@ public interface IToken {
 
     @Unmodifiable @NotNull Object token();
 
-    default @NotNull IToken closing() {
+    default IToken closing() {
         return Tokens.EMPTY_TOKEN;
     }
 
     default boolean hasClosing() {
-        return !Tokens.EMPTY_TOKEN.equals(this.closing());
+        return !Tokens.EMPTY_TOKEN.equals(this.closing()) && this.closing() != null;
     }
 
 }

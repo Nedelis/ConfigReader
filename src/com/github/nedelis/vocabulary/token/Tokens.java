@@ -1,6 +1,6 @@
 package com.github.nedelis.vocabulary.token;
 
-import com.github.nedelis.Settings;
+import com.github.nedelis.util.data.Settings;
 import org.jetbrains.annotations.NotNull;
 
 public enum Tokens {

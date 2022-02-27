@@ -29,7 +29,7 @@ public class Main {
 
     public static void main(String[] args) {
 
-        FullRead.read(new File("com/examples/some_config.ncf"));
+        FullRead.read(new File("com/examples/some_config.ncf"), new File("com/examples/data/reader.properties"));
 
         System.out.println(ReadFiles.getReadFiles());
 

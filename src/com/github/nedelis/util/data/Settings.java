@@ -1,4 +1,4 @@
-package com.github.nedelis;
+package com.github.nedelis.util.data;
 
 import com.github.nedelis.util.collections.Config;
 import com.github.nedelis.vocabulary.token.IToken;
@@ -6,6 +6,7 @@ import com.github.nedelis.vocabulary.token.Token;
 import com.github.nedelis.vocabulary.token.Tokens;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -15,9 +16,26 @@ import java.util.Properties;
 
 public final class Settings {
 
+    private static String absolutePathToSettings = "";
     private static final Config<Object> settings = new Config<>();
 
+    public static void setAbsolutePathToSettings(@NotNull File settingsFile) {
+        absolutePathToSettings = settingsFile.getAbsolutePath();
+    }
+
     private static void init() {
+
+        if(absolutePathToSettings.isEmpty()) {
+            var dirs = new File("src/data");
+            var file = new File("src/data/reader.properties");
+            try {
+                //noinspection StatementWithEmptyBody
+                if(dirs.mkdirs() || file.createNewFile());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            absolutePathToSettings = file.getAbsolutePath();
+        }
 
         var defaultTokens = new HashMap<String, Object>() {{
             put("PREFIX_AND_POSTFIX_OF_SECTION_NAME", new Token('[', ']'));
@@ -28,7 +46,6 @@ public final class Settings {
             put("LINE_COMMENT_PREFIX", new Token("//"));
         }};
         settings.putToSection("Tokens", defaultTokens);
-
     }
 
     private static @NotNull HashMap<String, String> propertiesToHashMap(@NotNull Properties properties) {
@@ -38,12 +55,11 @@ public final class Settings {
     }
 
     public static void readSettings() {
-
         init();
 
         var propertiesFromFile = new Properties();
         try {
-            propertiesFromFile.load(Files.newInputStream(Path.of("src/com/github/nedelis/util/data/reader.properties")));
+            propertiesFromFile.load(Files.newInputStream(Path.of(absolutePathToSettings)));
         } catch (IOException e) {
             System.err.println("Properties file wasn't found!");
         }
@@ -72,9 +88,11 @@ public final class Settings {
 
     @SuppressWarnings("unused")
     public static void setSetting(@NotNull String settingGroupPrefix, @NotNull String settingName, @NotNull String value) {
+        init();
+
         var propertiesFromFile = new Properties();
         try {
-            propertiesFromFile.load(Files.newInputStream(Path.of("src/com/github/nedelis/util/data/reader.properties")));
+            propertiesFromFile.load(Files.newInputStream(Path.of(absolutePathToSettings)));
         } catch (IOException e) {
             System.err.println("Properties file wasn't found!");
         }
@@ -87,7 +105,7 @@ public final class Settings {
         }
 
         try {
-            propertiesFromFile.store(Files.newOutputStream((Path.of("src/com/github/nedelis/util/data/reader.properties"))), "Update of field " + settingGroupPrefix + settingName);
+            propertiesFromFile.store(Files.newOutputStream(Path.of(absolutePathToSettings)), "Update of field " + settingGroupPrefix + settingName);
         } catch (IOException e) {
             System.err.println("Properties file wasn't found!");
         }
