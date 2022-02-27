@@ -41,6 +41,7 @@ public final class ParserFactory {
         return DEFAULT_PARSER;
     }
 
+    @Deprecated
     public static void registerParser(@NotNull Object parserToRegister) {
         if(parserToRegister.getClass().isAnnotationPresent(AParser.class)) {
             AParser parserParams = parserToRegister.getClass().getAnnotation(AParser.class);
