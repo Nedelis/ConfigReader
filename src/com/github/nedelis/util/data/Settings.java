@@ -83,7 +83,7 @@ public final class Settings {
     public static @NotNull IToken getTokenByName(@NotNull String name) {
         var field = new Object();
         if(settings.containsField("Tokens", name)) field = settings.getFieldValue("Tokens", name);
-        return field instanceof IToken ? (IToken) field : Tokens.EMPTY_TOKEN;
+        return field instanceof IToken token ? token : Tokens.EMPTY_TOKEN;
     }
 
     @SuppressWarnings("unused")
