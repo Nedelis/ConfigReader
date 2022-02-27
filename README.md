@@ -51,6 +51,7 @@ public class Main {
 
 В этом примере можно увидеть, что у переменных внутри файла можно указать тип данных (все типы данных, имеющихся по умолчанию, перечислены в разделе о файлах конфигурации NFC). В библиотеке предусмотрено дополнение имеющихся типов данных своими при помощи вложенного класса `ModificationUnit` у класса `FieldTypes`. Пример использования `ModificationUnit` расположен ниже.
 
+**Пример использования `ModificationUnit`:**
 ```java
 package com.examples.custom_field_types;
 
@@ -76,6 +77,7 @@ public class Main {
 
 Также вы можете регестрировать свои парсеры/транслейторы, имплементировав интерфейс `IParser`/`ITranslator`, а после зарегистрировав его через метод `registerParser`/`registerTranslator` в классе `ParserFactory`/`TranslatorFactory`. Пример регистрации парсера расположен ниже.
 
+**Пример регистрации парсера:**
 ```java
 package com.examples.parser_registration;
 
@@ -137,6 +139,19 @@ public class Main {
 }
 ```
 Регистрация транслейтора происходит аналогичным способом. В будущем планируется регестрицаия через аннотированный метод.
+
+Помимо регистрации парсеров и транслейторов есть возможность изменять токены, указанные в списке [`Tokens`](https://github.com/Nedelis/ConfigReader/blob/master/src/com/github/nedelis/vocabulary/token/Tokens.java). Для этого при использовании метода `read(configFile, readerPropertiesFile)` класса `FullRead` и нужно указывать `readerPropertiesFile`. Текущее содержание файла остаётся неизменным. По мере добавления настраиваемых через этот файл элементов, содержание тут будет обновляться. (так же содержание можно посмотреть в файле [`reader.properties`](https://github.com/Nedelis/ConfigReader/blob/master/src/com/github/nedelis/util/data/reader.properties)).
+
+**Содержание файла reader.properties:**
+```properties
+    tok.ASSIGNMENT_OPERATOR=\=
+    tok.PREFIX_AND_POSTFIX_OF_SECTION_NAME=[ ]
+    tok.ENUMERATION_OPERATOR=,
+    tok.PREFIX_AND_POSTFIX_OF_VAR_VALUE=( )
+    tok.PREFIX_AND_POSTFIX_OF_VAR_NAME=__ __
+    tok.LINE_COMMENT_PREFIX=//
+```
+Параметры указываются по принципу: символы до первого пробела — сам токен, символы после первого пробела — закрывающий токен.
 
 [Оглавление](#Оглавление) :arrow_up:
 ____
