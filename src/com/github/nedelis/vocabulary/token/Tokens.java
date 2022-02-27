@@ -8,7 +8,8 @@ public enum Tokens {
     PREFIX_AND_POSTFIX_OF_VAR_NAME(Settings.getTokenByName("PREFIX_AND_POSTFIX_OF_VAR_NAME")), PPVN(Settings.getTokenByName("PREFIX_AND_POSTFIX_OF_VAR_NAME")),
     PREFIX_AND_POSTFIX_OF_VAR_VALUE(Settings.getTokenByName("PREFIX_AND_POSTFIX_OF_VAR_VALUE")), PPVV(Settings.getTokenByName("PREFIX_AND_POSTFIX_OF_VAR_VALUE")),
     ASSIGNMENT_OPERATOR(Settings.getTokenByName("ASSIGNMENT_OPERATOR")), ASOP(Settings.getTokenByName("ASSIGNMENT_OPERATOR")),
-    ENUMERATION_OPERATOR(Settings.getTokenByName("ENUMERATION_OPERATOR")), ENOP(Settings.getTokenByName("ENUMERATION_OPERATOR"));
+    ENUMERATION_OPERATOR(Settings.getTokenByName("ENUMERATION_OPERATOR")), ENOP(Settings.getTokenByName("ENUMERATION_OPERATOR")),
+    LINE_COMMENT_PREFIX(Settings.getTokenByName("LINE_COMMENT_PREFIX")), LCPR(Settings.getTokenByName("LINE_COMMENT_PREFIX"));
 
     public static final IToken EMPTY_TOKEN = new Token("", "");
 

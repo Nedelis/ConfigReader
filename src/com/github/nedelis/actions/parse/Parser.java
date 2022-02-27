@@ -25,6 +25,8 @@ public final class Parser implements IParser {
         var hasFieldTypes = !modifications.contains("NFT");
 
         for(var line : page.toStringArray()) {
+            if(line.startsWith(Tokens.LCPR.getTokenAsString())) continue;
+
             if(hasSections && line.startsWith(Tokens.PPSN.getTokenAsString()) && line.endsWith(Tokens.PPSN.getClosingAsString())) {
                 PARSING_RESULT.add(line);
                 continue;

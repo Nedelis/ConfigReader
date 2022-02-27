@@ -5,7 +5,7 @@ import com.github.nedelis.actions.parse.ParserFactory;
 import com.github.nedelis.actions.read.Reader;
 import com.github.nedelis.actions.translate.TranslatorFactory;
 import com.github.nedelis.util.collections.Config;
-import com.github.nedelis.util.collections.ReadFiles;
+import com.github.nedelis.util.data.ReadFiles;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;

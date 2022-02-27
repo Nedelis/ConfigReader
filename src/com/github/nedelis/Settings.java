@@ -10,23 +10,31 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 public final class Settings {
 
-    private static final Properties settings = new Properties();
+    private static final Config<Object> settings = new Config<>();
 
     private static void init() {
 
-        var defaultTokens = new Properties();
-        defaultTokens.putAll(new HashMap<String, IToken>() {{
+        var defaultTokens = new HashMap<String, Object>() {{
             put("PREFIX_AND_POSTFIX_OF_SECTION_NAME", new Token('[', ']'));
             put("PREFIX_AND_POSTFIX_OF_VAR_NAME", new Token("__", "__"));
             put("PREFIX_AND_POSTFIX_OF_VAR_VALUE", new Token('(', ')'));
             put("ASSIGNMENT_OPERATOR", new Token('='));
             put("ENUMERATION_OPERATOR", new Token(','));
-        }});
-        settings.put("Tokens", defaultTokens);
+            put("LINE_COMMENT_PREFIX", new Token("//"));
+        }};
+        settings.putToSection("Tokens", defaultTokens);
+
+    }
+
+    private static @NotNull HashMap<String, String> propertiesToHashMap(@NotNull Properties properties) {
+        var map = new HashMap<String, String>();
+        for(var key : properties.keySet()) map.put(key.toString(), properties.getProperty(key.toString()));
+        return map;
     }
 
     public static void readSettings() {
@@ -40,42 +48,49 @@ public final class Settings {
             System.err.println("Properties file wasn't found!");
         }
 
-        readTokens(propertiesFromFile);
+        var propertiesMap = propertiesToHashMap(propertiesFromFile);
+        readTokens(propertiesMap);
     }
 
-    private static void readTokens(@NotNull Properties properties) {
+    private static void readTokens(@NotNull HashMap<String, String> properties) {
         for(var key : properties.keySet()) {
-            if(key.toString().startsWith("tok.")) {
-                var value = properties.getProperty(key.toString());
+            if(key.startsWith("tok.")) {
+                var value = properties.get(key);
                 var params = value.split(" ");
-                key = key.toString().substring(key.toString().indexOf("tok.") + 4);
-                if(params.length == 1) {
-                    var tokens = settings.get("Tokens");
-                    if(tokens instanceof Properties) {
-                        ((Properties) tokens).put(key, new Token(params[0]));
-                    }
-                    settings.put("Tokens", tokens);
-                } else if(params.length == 2) {
-                    var tokens = settings.get("Tokens");
-                    if(tokens instanceof Properties) {
-                        ((Properties) tokens).put(key, new Token(params[0], params[1]));
-                    }
-                    settings.put("Tokens", tokens);
-                }
+                key = key.substring(key.indexOf("tok.") + 4);
+                if(params.length == 1) settings.putToSection("Tokens", Map.of(key, new Token(params[0])));
+                else if(params.length == 2) settings.putToSection("Tokens", Map.of(key, new Token(params[0], params[1])));
             }
         }
     }
 
     public static @NotNull IToken getTokenByName(@NotNull String name) {
-        var tokens = settings.get("Tokens");
-        if(tokens instanceof Properties) {
-            return (IToken) ((Properties) tokens).get(name);
-        }
-        return Tokens.EMPTY_TOKEN;
+        var field = new Object();
+        if(settings.containsField("Tokens", name)) field = settings.getFieldValue("Tokens", name);
+        return field instanceof IToken ? (IToken) field : Tokens.EMPTY_TOKEN;
     }
 
+    @SuppressWarnings("unused")
     public static void setSetting(@NotNull String settingGroupPrefix, @NotNull String settingName, @NotNull String value) {
+        var propertiesFromFile = new Properties();
+        try {
+            propertiesFromFile.load(Files.newInputStream(Path.of("src/com/github/nedelis/util/data/reader.properties")));
+        } catch (IOException e) {
+            System.err.println("Properties file wasn't found!");
+        }
 
+        var propertiesMap = propertiesToHashMap(propertiesFromFile);
+        for(var key : propertiesMap.keySet()) {
+            if(key.startsWith(settingGroupPrefix)) {
+                propertiesFromFile.setProperty(settingGroupPrefix + settingName, value);
+            }
+        }
+
+        try {
+            propertiesFromFile.store(Files.newOutputStream((Path.of("src/com/github/nedelis/util/data/reader.properties"))), "Update of field " + settingGroupPrefix + settingName);
+        } catch (IOException e) {
+            System.err.println("Properties file wasn't found!");
+        }
     }
 
 }

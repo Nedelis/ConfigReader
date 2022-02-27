@@ -62,13 +62,13 @@ public final class Config<FV> {
     }
 
     public void addField(@NotNull String sectionName, @NotNull String fieldName, @NotNull FV value) {
-        if(!this.config.containsKey(sectionName)) this.addSection(sectionName);
-        if(!this.config.get(sectionName).containsKey(fieldName)) this.config.get(sectionName).put(fieldName, value);
+        if(!this.containsSection(sectionName)) this.addSection(sectionName);
+        if(!this.containsField(sectionName, fieldName)) this.setFieldValue(sectionName, fieldName, value);
     }
 
     public void setFieldValue(@NotNull String sectionName, @NotNull String fieldName, @NotNull FV newValue) {
-        if(!this.config.containsKey(sectionName)) this.addSection(sectionName);
-        this.config.get(sectionName).put(fieldName, newValue);
+        if(!this.containsSection(sectionName)) this.addSection(sectionName);
+        this.getSectionFields(sectionName).put(fieldName, newValue);
     }
 
 
@@ -78,11 +78,25 @@ public final class Config<FV> {
     }
 
     public void removeField(@NotNull String sectionName, @NotNull String fieldName) {
-        if(this.config.containsKey(sectionName)) this.config.get(sectionName).remove(fieldName);
+        if(this.containsSection(sectionName)) this.getSectionFields(sectionName).remove(fieldName);
     }
 
-    public void clear() {
+    public void clearConfig() {
         this.config.clear();
+    }
+
+    public void clearSection(@NotNull String sectionName) {
+        this.getSectionFields(sectionName).clear();
+    }
+
+
+
+    public boolean containsSection(@NotNull String sectionName) {
+        return this.config.containsKey(sectionName);
+    }
+
+    public boolean containsField(@NotNull String sectionName, @NotNull String fieldName) {
+        return this.containsSection(sectionName) && this.getSectionFields(sectionName).containsKey(fieldName);
     }
 
 
